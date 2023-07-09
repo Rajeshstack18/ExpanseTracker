@@ -1,6 +1,8 @@
 import {Component} from 'react'
 import {v4 as uuidv4} from 'uuid'
 
+import {format} from 'date-fns'
+
 import AmountItem from './components/AmountItem'
 
 import './App.css'
@@ -9,14 +11,17 @@ const initialAmountList = [
   {
     id: uuidv4(),
     amount: 100,
+    date: '2023-07-09',
   },
   {
     id: uuidv4(),
     amount: 500,
+    date: '2023-07-09',
   },
   {
     id: uuidv4(),
-    amount: 50,
+    amount: -50,
+    date: '2023-07-09',
   },
 ]
 
@@ -31,7 +36,8 @@ class App extends Component {
     const {amount} = this.state
     const newAmount = {
       id: uuidv4(),
-      amount,
+      amount: Number(amount),
+      date: format(new Date(), 'yyyy-MM-dd'),
     }
 
     this.setState(prevState => ({
@@ -42,6 +48,15 @@ class App extends Component {
 
   onChangeAmount = event => {
     this.setState({amount: event.target.value})
+  }
+
+  getTotalAmount = () => {
+    const {amountList} = this.state
+    const totalAmount = amountList.reduce(
+      (total, item) => total + item.amount,
+      0,
+    )
+    return totalAmount
   }
 
   render() {
@@ -55,8 +70,7 @@ class App extends Component {
               className="contact-form-container"
               onSubmit={this.onAddAmount}
             >
-              <p className="heading2">Balance:550</p>
-
+              <h2>Total Amount: {this.getTotalAmount()}</h2>
               <input
                 type="number"
                 className="input"
